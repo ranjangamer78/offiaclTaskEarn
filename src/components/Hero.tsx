@@ -41,7 +41,7 @@ export const Hero: React.FC<HeroProps> = ({ onDownloadClick, onOpenSettings }) =
             {/* Logo image */}
             <div className="relative w-11 h-11 rounded-xl overflow-hidden shadow-md shadow-amber-500/20 border border-amber-400/40 p-0.5 bg-gradient-to-tr from-amber-400 to-indigo-600">
               <img
-                src="./taskearn-logo.png"
+                src={`${import.meta.env.BASE_URL}taskearn-logo.png`}
                 alt="TaskEarn Logo"
                 className="w-full h-full object-cover rounded-[10px]"
                 referrerPolicy="no-referrer"

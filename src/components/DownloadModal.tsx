@@ -124,7 +124,7 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-indigo-600 p-0.5 shadow-md">
             <img
-              src="./taskearn-logo.png"
+              src={`${import.meta.env.BASE_URL}taskearn-logo.png`}
               alt="TaskEarn"
               className="w-full h-full object-cover rounded-[14px]"
               referrerPolicy="no-referrer"

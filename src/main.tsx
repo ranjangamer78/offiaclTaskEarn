@@ -87,15 +87,27 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 }
 
-const rootEl = document.getElementById('root');
-if (rootEl) {
-  createRoot(rootEl).render(
-    <StrictMode>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </StrictMode>,
-  );
+function mountApp() {
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    try {
+      createRoot(rootEl).render(
+        <StrictMode>
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        </StrictMode>,
+      );
+    } catch (err) {
+      console.error('TaskEarn Initial Render Error:', err);
+    }
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountApp);
+} else {
+  mountApp();
 }
 
 

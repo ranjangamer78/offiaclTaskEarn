@@ -20,7 +20,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onDownloadClick }) 
             <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
               <div className="w-9 h-9 rounded-xl overflow-hidden border border-amber-400/50 p-0.5 bg-gradient-to-tr from-amber-400 to-indigo-600">
                 <img
-                  src="./taskearn-logo.png"
+                  src={`${import.meta.env.BASE_URL}taskearn-logo.png`}
                   alt="TaskEarn Logo"
                   className="w-full h-full object-cover rounded-[9px]"
                   referrerPolicy="no-referrer"

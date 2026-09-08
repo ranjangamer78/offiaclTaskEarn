@@ -40,7 +40,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```bash
 npm run build
 ```
-The production bundle will be generated in `dist/`.
+The production bundle will be generated in `dist/` and mirrored to `docs/`.
+
+## 🌐 GitHub Pages Deployment
+
+This project is configured to work out-of-the-box on GitHub Pages:
+1. Push this repository to GitHub.
+2. Go to your GitHub repository **Settings** → **Pages**.
+3. Under **Build and deployment** → **Source**, you can choose either:
+   - **GitHub Actions** (Recommended — builds and deploys automatically via `.github/workflows/deploy.yml`)
+   - **Deploy from a branch** → Branch: `main` → Folder: `/docs` or `/ (root)`.
+4. Your website will be live with full UI, interactive games, and APK downloads!
 
 ## 📄 License
 All rights reserved © TaskEarn.

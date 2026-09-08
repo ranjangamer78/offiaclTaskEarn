@@ -5,8 +5,8 @@ import fs from 'fs';
 import {defineConfig} from 'vite';
 
 export default defineConfig(({ command }) => {
-  // Use relative base './' for production so the build works universally on any
-  // GitHub repository name, user page, custom domain, or subpath without 404 errors.
+  // Use relative './' base for production builds so assets resolve correctly
+  // on any GitHub repository name, user page, custom domain, or subfolder.
   const base = command === 'build' ? './' : '/';
 
   return {
@@ -40,10 +40,23 @@ export default defineConfig(({ command }) => {
         },
         closeBundle() {
           const distDir = path.resolve(__dirname, 'dist');
+          const docsDir = path.resolve(__dirname, 'docs');
           const indexPath = path.join(distDir, 'index.html');
           const fourOhFourPath = path.join(distDir, '404.html');
           if (fs.existsSync(indexPath)) {
             fs.copyFileSync(indexPath, fourOhFourPath);
+          }
+          // Ensure .nojekyll exists in dist so GitHub Pages does not run Jekyll processing
+          fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
+
+          // Also mirror build to docs/ so users who choose "Deploy from branch -> /docs" also work
+          try {
+            if (!fs.existsSync(docsDir)) {
+              fs.mkdirSync(docsDir, { recursive: true });
+            }
+            fs.cpSync(distDir, docsDir, { recursive: true });
+          } catch (e) {
+            console.warn('Could not mirror to docs/ folder:', e);
           }
         },
       },

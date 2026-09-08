@@ -20,7 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDownloadClick, onOpenSettings,
           <a href="#" className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-amber-500/20 border border-amber-400/50 p-0.5 bg-gradient-to-tr from-amber-400 to-indigo-600 transition-transform duration-200 group-hover:scale-105">
               <img
-                src="./taskearn-logo.png"
+                src={`${import.meta.env.BASE_URL}taskearn-logo.png`}
                 alt="TaskEarn Logo"
                 className="w-full h-full object-cover rounded-[9px]"
                 referrerPolicy="no-referrer"
