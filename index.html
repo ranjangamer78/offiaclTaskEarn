@@ -19,34 +19,15 @@
         padding: 0;
         min-height: 100vh;
       }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
     </style>
     <script>
-      // Catch any script loading errors on GitHub Pages
-      window.addEventListener('error', function(event) {
-        var errBox = document.getElementById('taskearn-error-view');
-        var spinner = document.getElementById('taskearn-spinner-view');
-        if (errBox && spinner) {
-          spinner.style.display = 'none';
-          errBox.style.display = 'flex';
-          var desc = document.getElementById('taskearn-error-text');
-          if (desc && event.message) {
-            desc.textContent = event.message;
-          }
-        }
-      }, true);
-
-      // 6-second timeout fallback: if React takes too long to mount, give the user a clear reload button
-      setTimeout(function() {
-        var root = document.getElementById('root');
-        var spinner = document.getElementById('taskearn-spinner-view');
-        if (spinner && document.body.contains(spinner)) {
-          var errBox = document.getElementById('taskearn-error-view');
-          if (errBox) {
-            spinner.style.display = 'none';
-            errBox.style.display = 'flex';
-          }
-        }
-      }, 6000);
+      // Automatically redirect to trailing slash on GitHub Pages so relative assets load properly
+      if (location.pathname.slice(-1) !== '/' && !location.pathname.split('/').pop().includes('.')) {
+        location.replace(location.pathname + '/' + location.search + location.hash);
+      }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -54,30 +35,11 @@
   </head>
   <body class="bg-slate-950 text-slate-100 font-['Plus_Jakarta_Sans',sans-serif] antialiased selection:bg-indigo-500 selection:text-white">
     <div id="root">
-      <!-- High-polish loader while React initializes -->
-      <div id="taskearn-spinner-view" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #020617; color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;">
-        <div style="width: 52px; height: 52px; border: 4px solid #1e293b; border-top-color: #f59e0b; border-radius: 50%; animation: spin 0.9s linear infinite;"></div>
-        <p style="margin-top: 18px; font-weight: 800; font-size: 18px; color: #f8fafc; letter-spacing: 0.02em;">TaskEarn</p>
-        <p style="margin-top: 6px; font-size: 13px; color: #94a3b8;">Loading official platform...</p>
+      <!-- Clean, minimal loader while React initializes -->
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #020617; color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;">
+        <div style="width: 44px; height: 44px; border: 3.5px solid #1e293b; border-top-color: #f59e0b; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p style="margin-top: 14px; font-weight: 800; font-size: 16px; color: #f8fafc; letter-spacing: 0.04em;">TaskEarn</p>
       </div>
-
-      <!-- Error recovery view if resource fails to load -->
-      <div id="taskearn-error-view" style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; background-color: #020617; color: #f8fafc; font-family: sans-serif; text-align: center; padding: 24px;">
-        <div style="width: 60px; height: 60px; border-radius: 16px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px;">⚡</div>
-        <h2 style="font-size: 20px; font-weight: 800; color: #f8fafc; margin: 0 0 8px 0;">TaskEarn Loading Help</h2>
-        <p id="taskearn-error-text" style="max-width: 440px; font-size: 13px; color: #94a3b8; line-height: 1.5; margin: 0 0 20px 0;">
-          The app is taking longer than usual to connect. Please reload or verify GitHub Pages deployment settings.
-        </p>
-        <button onclick="window.location.reload()" style="padding: 12px 28px; border-radius: 12px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #020617; font-weight: 800; font-size: 14px; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);">
-          Reload Application
-        </button>
-      </div>
-
-      <style>
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      </style>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
