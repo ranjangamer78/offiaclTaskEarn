@@ -53,8 +53,12 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
     setDownloadStarted(true);
 
     // Create virtual download element for direct APK download to File Manager
+    const rawUrl = config.apkUrl || 'TaskEarn.apk';
+    const downloadUrl = rawUrl.startsWith('http')
+      ? rawUrl
+      : `${import.meta.env.BASE_URL}${rawUrl.replace(/^\//, '')}`;
     const link = document.createElement('a');
-    link.href = config.apkUrl || '/TaskEarn.apk';
+    link.href = downloadUrl;
     link.setAttribute('download', 'TaskEarn.apk');
     document.body.appendChild(link);
     link.click();
@@ -109,7 +113,7 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-indigo-600 p-0.5 shadow-md">
             <img
-              src="/taskearn-logo.png"
+              src="./taskearn-logo.png"
               alt="TaskEarn"
               className="w-full h-full object-cover rounded-[14px]"
               referrerPolicy="no-referrer"

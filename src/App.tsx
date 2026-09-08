@@ -59,7 +59,10 @@ export default function App() {
   // Primary download handler: triggers direct APK download to File Manager
   const handleDownloadClick = () => {
     // Trigger direct APK file download straight to Android Download / File Manager
-    const downloadUrl = downloadConfig.apkUrl || '/TaskEarn.apk';
+    const rawUrl = downloadConfig.apkUrl || 'TaskEarn.apk';
+    const downloadUrl = rawUrl.startsWith('http')
+      ? rawUrl
+      : `${import.meta.env.BASE_URL}${rawUrl.replace(/^\//, '')}`;
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.setAttribute('download', 'TaskEarn.apk');

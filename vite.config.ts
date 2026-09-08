@@ -6,6 +6,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [
       react(),
       tailwindcss(),
@@ -28,6 +29,14 @@ export default defineConfig(() => {
             }
             next();
           });
+        },
+        closeBundle() {
+          const distDir = path.resolve(__dirname, 'dist');
+          const indexPath = path.join(distDir, 'index.html');
+          const fourOhFourPath = path.join(distDir, '404.html');
+          if (fs.existsSync(indexPath)) {
+            fs.copyFileSync(indexPath, fourOhFourPath);
+          }
         },
       },
     ],
