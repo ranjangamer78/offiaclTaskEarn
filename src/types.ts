@@ -21,7 +21,9 @@ export interface FeatureItem {
 
 export interface DownloadConfig {
   apkUrl: string;
+  mediafireUrl?: string;
   googleDriveUrl: string;
+  directServerUrl?: string;
   version: string;
   fileSize: string;
   minAndroid: string;

@@ -29,6 +29,9 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
   onUpdateConfig,
 }) => {
   const [activeTab, setActiveTab] = useState<'download' | 'settings'>('download');
+  const [customApkUrl, setCustomApkUrl] = useState(
+    config.apkUrl || 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file'
+  );
   const [customDriveUrl, setCustomDriveUrl] = useState(config.googleDriveUrl);
   const [copiedLink, setCopiedLink] = useState(false);
   const [downloadStarted, setDownloadStarted] = useState(false);
@@ -52,14 +55,18 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
   const handleTriggerDirectDownload = () => {
     setDownloadStarted(true);
 
-    // Create virtual download element for direct APK download to File Manager
-    const rawUrl = config.apkUrl || 'TaskEarn.apk';
+    const rawUrl = config.apkUrl || 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file';
     const downloadUrl = rawUrl.startsWith('http')
       ? rawUrl
       : `${import.meta.env.BASE_URL}${rawUrl.replace(/^\//, '')}`;
+
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.setAttribute('download', 'TaskEarn.apk');
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    if (!rawUrl.startsWith('http')) {
+      link.setAttribute('download', 'TaskEarn_1.0.apk');
+    }
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -69,13 +76,14 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
     }, 4000);
   };
 
-  const handleSaveDriveLink = (e: React.FormEvent) => {
+  const handleSaveLinks = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalUrl = convertToDirectDriveLink(customDriveUrl.trim());
+    const finalDriveUrl = convertToDirectDriveLink(customDriveUrl.trim());
     onUpdateConfig({
       ...config,
-      apkUrl: finalUrl,
-      googleDriveUrl: customDriveUrl.trim(),
+      apkUrl: customApkUrl.trim() || 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file',
+      mediafireUrl: customApkUrl.trim() || 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file',
+      googleDriveUrl: finalDriveUrl,
     });
     setSaveSuccess(true);
     setTimeout(() => {
@@ -85,10 +93,13 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(config.apkUrl);
+    const copyTarget = config.apkUrl || 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file';
+    navigator.clipboard.writeText(copyTarget);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
   };
+
+  const mediafireLink = config.mediafireUrl || config.apkUrl || 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
@@ -166,7 +177,7 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-pink-500 hover:from-amber-300 hover:to-pink-400 text-slate-950 font-extrabold text-base shadow-lg shadow-orange-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer font-['Outfit',sans-serif]"
             >
               <Download className="w-5 h-5 stroke-[2.5]" />
-              <span>{downloadStarted ? 'Download Started! Check Notification' : 'Click to Download APK Directly'}</span>
+              <span>{downloadStarted ? 'Download Started! Check Notifications' : 'Download TaskEarn APK (MediaFire)'}</span>
             </button>
 
             {downloadStarted && (
@@ -176,34 +187,64 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
                 className="mt-3 p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Downloading TaskEarn APK file. Follow the installation guide below.</span>
+                <span>TaskEarn_1.0.apk download initiated. Check your browser downloads or notification tray.</span>
               </motion.div>
             )}
 
-            {/* Google Drive Link Option */}
-            <div className="mt-4 p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                  <HardDrive className="w-4 h-4" />
+            {/* Mirror Sources Section */}
+            <div className="mt-4 space-y-2.5">
+              {/* MediaFire Official Link */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-950/50 to-indigo-950/40 border border-blue-500/30 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-black text-sm">
+                    MF
+                  </div>
+                  <div className="text-left">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-white">MediaFire Official Server</p>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-500/20 text-blue-300">
+                        Recommended
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400">TaskEarn_1.0.apk (34 MB) • High Speed</p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-xs font-bold text-white">Download via Google Drive</p>
-                  <p className="text-[10px] text-slate-400">High speed cloud mirror link</p>
-                </div>
+                <a
+                  href={mediafireLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
+                >
+                  <span>Download</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
-              <a
-                href={config.googleDriveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1 transition-colors"
-              >
-                <span>Open Link</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
+
+              {/* Google Drive Link Option */}
+              <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                    <HardDrive className="w-4 h-4" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-bold text-white">Google Drive Mirror</p>
+                    <p className="text-[10px] text-slate-400">Alternative cloud backup link</p>
+                  </div>
+                </div>
+                <a
+                  href={config.googleDriveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold flex items-center gap-1 transition-colors"
+                >
+                  <span>Open</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
 
             {/* Android 3-Step Setup Quick Guide */}
-            <div className="mt-6 border-t border-slate-800 pt-4">
+            <div className="mt-5 border-t border-slate-800 pt-4">
               <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5">
                 How to install on Android:
               </h4>
@@ -212,7 +253,7 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
                   <span className="w-5 h-5 rounded-full bg-slate-800 text-amber-400 font-bold flex items-center justify-center shrink-0 text-[10px]">
                     1
                   </span>
-                  <span>Once downloaded, open your phone's <strong>File Manager &gt; Downloads</strong> (or notification bar) and tap <strong>TaskEarn.apk</strong>.</span>
+                  <span>Once downloaded, open your phone's <strong>File Manager &gt; Downloads</strong> (or notification bar) and tap <strong>TaskEarn_1.0.apk</strong>.</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-slate-800 text-amber-400 font-bold flex items-center justify-center shrink-0 text-[10px]">
@@ -230,26 +271,42 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
             </div>
 
             {/* Copy Link & Share */}
-            <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
               <button
                 onClick={handleCopyLink}
                 className="hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Copy className="w-3.5 h-3.5" />
-                <span>{copiedLink ? 'Copied to Clipboard!' : 'Copy Direct Download Link'}</span>
+                <span>{copiedLink ? 'Copied to Clipboard!' : 'Copy MediaFire APK Link'}</span>
               </button>
 
               <span className="flex items-center gap-1 text-emerald-400 font-medium">
-                <ShieldCheck className="w-3.5 h-3.5" /> 100% Safe APK
+                <ShieldCheck className="w-3.5 h-3.5" /> 100% Safe & Verified APK
               </span>
             </div>
           </div>
         ) : (
-          /* SETTINGS TAB: REPLACE GOOGLE DRIVE LINK */
-          <form onSubmit={handleSaveDriveLink} className="space-y-4">
+          /* SETTINGS TAB: REPLACE MEDIAFIRE OR GOOGLE DRIVE LINK */
+          <form onSubmit={handleSaveLinks} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                Google Drive or Direct APK Download URL
+                Primary APK Download URL (MediaFire / Direct URL)
+              </label>
+              <input
+                type="text"
+                value={customApkUrl}
+                onChange={(e) => setCustomApkUrl(e.target.value)}
+                placeholder="https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-indigo-500 font-mono"
+              />
+              <p className="mt-1.5 text-[11px] text-slate-400 leading-relaxed">
+                Enter your MediaFire download link or any direct APK URL.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                Backup Google Drive Link (Optional)
               </label>
               <input
                 type="text"
@@ -258,15 +315,12 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
                 placeholder="https://drive.google.com/file/d/YOUR_FILE_ID/view"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-indigo-500 font-mono"
               />
-              <p className="mt-1.5 text-[11px] text-slate-400 leading-relaxed">
-                Tip: You can paste standard Google Drive view links. We automatically format it into a direct download link (<code className="text-indigo-300">export=download</code>).
-              </p>
             </div>
 
             {saveSuccess && (
               <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Download link successfully replaced and saved!</span>
+                <span>Download links successfully updated and saved!</span>
               </div>
             )}
 

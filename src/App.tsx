@@ -18,14 +18,17 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure apkUrl points to /TaskEarn.apk for direct file manager saving
-        if (!parsed.apkUrl || parsed.apkUrl.includes('drive.google.com') || parsed.apkUrl.includes('/downloads/')) {
+        // Ensure apkUrl points to the latest MediaFire or custom download URL
+        if (!parsed.apkUrl || parsed.apkUrl === '/TaskEarn.apk' || parsed.apkUrl.includes('drive.google.com') || parsed.apkUrl.includes('/downloads/')) {
           return {
             ...DEFAULT_DOWNLOAD_CONFIG,
             googleDriveUrl: parsed.googleDriveUrl || DEFAULT_DOWNLOAD_CONFIG.googleDriveUrl,
           };
         }
-        return parsed;
+        return {
+          ...DEFAULT_DOWNLOAD_CONFIG,
+          ...parsed,
+        };
       } catch (e) {
         return DEFAULT_DOWNLOAD_CONFIG;
       }
@@ -56,27 +59,31 @@ export default function App() {
     localStorage.setItem('taskearn_download_config', JSON.stringify(newConfig));
   };
 
-  // Primary download handler: triggers direct APK download to File Manager
+  // Primary download handler: triggers direct APK download to File Manager via MediaFire / configured link
   const handleDownloadClick = () => {
-    // Trigger direct APK file download straight to Android Download / File Manager
-    const rawUrl = downloadConfig.apkUrl || 'TaskEarn.apk';
+    const rawUrl = downloadConfig.apkUrl || DEFAULT_DOWNLOAD_CONFIG.apkUrl;
     const downloadUrl = rawUrl.startsWith('http')
       ? rawUrl
       : `${import.meta.env.BASE_URL}${rawUrl.replace(/^\//, '')}`;
+    
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.setAttribute('download', 'TaskEarn.apk');
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    if (!rawUrl.startsWith('http')) {
+      link.setAttribute('download', 'TaskEarn_1.0.apk');
+    }
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
     // Show instant toast notification confirming save to File Manager
-    setToastMessage('TaskEarn.apk downloading directly to your Phone File Manager (Downloads)!');
+    setToastMessage('TaskEarn APK downloading! Check your browser downloads or file manager.');
     setTimeout(() => {
       setToastMessage(null);
     }, 5000);
 
-    // Open guidance modal so user has step-by-step install guide and Google Drive mirror
+    // Open guidance modal so user has step-by-step install guide and alternative mirrors
     setIsDownloadModalOpen(true);
   };
 

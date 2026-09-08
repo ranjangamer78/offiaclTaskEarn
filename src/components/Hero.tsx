@@ -127,7 +127,7 @@ export const Hero: React.FC<HeroProps> = ({ onDownloadClick, onOpenSettings }) =
                 <div className="text-left">
                   <span className="block text-lg sm:text-xl leading-none">Download TaskEarn</span>
                   <span className="block text-[11px] font-bold text-slate-900/80 mt-1 uppercase tracking-wider">
-                    Direct APK Download • Saved to File Manager (34 MB)
+                    Direct APK Download • Official MediaFire Server (34 MB)
                   </span>
                 </div>
               </button>

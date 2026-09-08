@@ -1,9 +1,11 @@
 import { ScreenshotSlide, FeatureItem, DownloadConfig } from '../types';
 
 export const DEFAULT_DOWNLOAD_CONFIG: DownloadConfig = {
-  // Direct APK download served directly to Android File Manager
-  apkUrl: '/TaskEarn.apk',
+  // Official MediaFire APK Download Link
+  apkUrl: 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file',
+  mediafireUrl: 'https://www.mediafire.com/file/qtyd2zkox2dejyz/TaskEarn_1.0.apk/file',
   googleDriveUrl: 'https://drive.google.com/file/d/13tb91ZrJ8WYcOzvoxFmOZ14GtFRpKr9r/view?usp=sharing',
+  directServerUrl: '/TaskEarn.apk',
   version: 'v1.0 (Latest)',
   fileSize: '34 MB',
   minAndroid: 'Android 7.0+',
