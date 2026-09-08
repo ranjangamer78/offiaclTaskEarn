@@ -9,31 +9,28 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  error: Error | null;
+  errorMessage: string;
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  public declare props: Props;
+class ErrorBoundary extends React.Component<Props, State> {
+  state: State = {
+    hasError: false,
+    errorMessage: '',
+  };
 
   constructor(props: Props) {
     super(props);
-    this.props = props;
   }
 
-  public state: State = {
-    hasError: false,
-    error: null,
-  };
-
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, errorMessage: error?.message || 'Error occurred' };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('TaskEarn App Runtime Error:', error, errorInfo);
   }
 
-  public render() {
+  render() {
     if (this.state.hasError) {
       return (
         <div style={{
@@ -65,7 +62,7 @@ class ErrorBoundary extends Component<Props, State> {
             TaskEarn
           </h1>
           <p style={{ maxWidth: '440px', color: '#94a3b8', fontSize: '14px', marginBottom: '24px', lineHeight: '1.6' }}>
-            {this.state.error?.message || 'Something went wrong while initializing the application.'}
+            {this.state.errorMessage || 'Something went wrong while initializing the application.'}
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -86,7 +83,7 @@ class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.props.children;
+    return (this as any).props.children;
   }
 }
 
@@ -100,4 +97,5 @@ if (rootEl) {
     </StrictMode>,
   );
 }
+
 

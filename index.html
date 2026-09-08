@@ -11,36 +11,33 @@
     <meta name="theme-color" content="#020617" />
     <meta name="twitter:card" content="summary_large_image" />
     <style>
-      /* Ensure no white screen flash while loading */
+      /* Ensure clean dark background on all devices */
       html, body {
-        background-color: #020617 !important;
+        background-color: #020617;
         color: #f8fafc;
         margin: 0;
         padding: 0;
         min-height: 100vh;
-      }
-      @keyframes spin {
-        to { transform: rotate(360deg); }
+        overflow-x: hidden;
       }
     </style>
     <script>
-      // Automatically redirect to trailing slash on GitHub Pages so relative assets load properly
-      if (location.pathname.slice(-1) !== '/' && !location.pathname.split('/').pop().includes('.')) {
-        location.replace(location.pathname + '/' + location.search + location.hash);
-      }
+      // Safe trailing-slash normalization for GitHub Pages custom directories
+      (function() {
+        try {
+          var p = location.pathname;
+          if (p.length > 1 && !p.endsWith('/') && p.indexOf('.') === -1) {
+            location.replace(p + '/' + location.search + location.hash);
+          }
+        } catch (e) {}
+      })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body class="bg-slate-950 text-slate-100 font-['Plus_Jakarta_Sans',sans-serif] antialiased selection:bg-indigo-500 selection:text-white">
-    <div id="root">
-      <!-- Clean, minimal loader while React initializes -->
-      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #020617; color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;">
-        <div style="width: 44px; height: 44px; border: 3.5px solid #1e293b; border-top-color: #f59e0b; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-        <p style="margin-top: 14px; font-weight: 800; font-size: 16px; color: #f8fafc; letter-spacing: 0.04em;">TaskEarn</p>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

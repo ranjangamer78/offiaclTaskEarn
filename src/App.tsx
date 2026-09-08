@@ -14,24 +14,27 @@ import { Download, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function App() {
   const [downloadConfig, setDownloadConfig] = useState<DownloadConfig>(() => {
-    const saved = localStorage.getItem('taskearn_download_config');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // Ensure apkUrl points to the latest MediaFire or custom download URL
-        if (!parsed.apkUrl || parsed.apkUrl === '/TaskEarn.apk' || parsed.apkUrl.includes('drive.google.com') || parsed.apkUrl.includes('/downloads/')) {
+    try {
+      if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+        const saved = window.localStorage.getItem('taskearn_download_config');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Ensure apkUrl points to the latest MediaFire or custom download URL
+          if (!parsed.apkUrl || parsed.apkUrl === '/TaskEarn.apk' || parsed.apkUrl.includes('drive.google.com') || parsed.apkUrl.includes('/downloads/')) {
+            return {
+              ...DEFAULT_DOWNLOAD_CONFIG,
+              googleDriveUrl: parsed.googleDriveUrl || DEFAULT_DOWNLOAD_CONFIG.googleDriveUrl,
+            };
+          }
           return {
             ...DEFAULT_DOWNLOAD_CONFIG,
-            googleDriveUrl: parsed.googleDriveUrl || DEFAULT_DOWNLOAD_CONFIG.googleDriveUrl,
+            ...parsed,
           };
         }
-        return {
-          ...DEFAULT_DOWNLOAD_CONFIG,
-          ...parsed,
-        };
-      } catch (e) {
-        return DEFAULT_DOWNLOAD_CONFIG;
       }
+    } catch (e) {
+      // Storage access may be denied in iframe or private browsing
+      console.warn('LocalStorage access unavailable:', e);
     }
     return DEFAULT_DOWNLOAD_CONFIG;
   });
@@ -44,19 +47,29 @@ export default function App() {
   // Monitor scroll for mobile sticky download button
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 400) {
-        setShowStickyDownload(true);
-      } else {
-        setShowStickyDownload(false);
+      try {
+        if (window.scrollY > 400) {
+          setShowStickyDownload(true);
+        } else {
+          setShowStickyDownload(false);
+        }
+      } catch (e) {
+        // Safe scroll check
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleUpdateConfig = (newConfig: DownloadConfig) => {
     setDownloadConfig(newConfig);
-    localStorage.setItem('taskearn_download_config', JSON.stringify(newConfig));
+    try {
+      if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+        window.localStorage.setItem('taskearn_download_config', JSON.stringify(newConfig));
+      }
+    } catch (e) {
+      console.warn('LocalStorage write unavailable:', e);
+    }
   };
 
   // Primary download handler: triggers direct APK download to File Manager via MediaFire / configured link

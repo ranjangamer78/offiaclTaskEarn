@@ -148,12 +148,12 @@ export const PhoneMockupSlider: React.FC<PhoneMockupSliderProps> = ({ onDownload
         {/* Central Phone Mockup Container */}
         <div className="relative flex flex-col items-center justify-center">
           
-          {/* Navigation Arrows for Desktop */}
+          {/* Navigation Arrows for Desktop & Tablets */}
           <button
             id="slider-prev-btn"
             onClick={handlePrev}
             aria-label="Previous screenshot"
-            className="absolute left-2 sm:left-6 lg:left-12 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/80 border border-slate-700/80 text-white flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 transition-all duration-200 backdrop-blur-md shadow-xl hover:scale-110 cursor-pointer"
+            className="hidden sm:flex absolute left-1 sm:left-4 md:left-8 lg:left-12 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-900/90 border border-slate-700/80 text-white items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 transition-all duration-200 backdrop-blur-md shadow-xl hover:scale-110 cursor-pointer"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -162,7 +162,7 @@ export const PhoneMockupSlider: React.FC<PhoneMockupSliderProps> = ({ onDownload
             id="slider-next-btn"
             onClick={handleNext}
             aria-label="Next screenshot"
-            className="absolute right-2 sm:right-6 lg:right-12 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/80 border border-slate-700/80 text-white flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 transition-all duration-200 backdrop-blur-md shadow-xl hover:scale-110 cursor-pointer"
+            className="hidden sm:flex absolute right-1 sm:right-4 md:right-8 lg:right-12 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-900/90 border border-slate-700/80 text-white items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 transition-all duration-200 backdrop-blur-md shadow-xl hover:scale-110 cursor-pointer"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
@@ -188,8 +188,8 @@ export const PhoneMockupSlider: React.FC<PhoneMockupSliderProps> = ({ onDownload
             </motion.div>
           </div>
 
-          {/* The Smartphone Frame */}
-          <div className="relative w-[300px] sm:w-[330px] md:w-[360px] h-[640px] sm:h-[680px] md:h-[720px] rounded-[48px] bg-slate-900 p-3 shadow-2xl shadow-indigo-950/60 border-[4px] border-slate-700 ring-1 ring-white/10 select-none">
+          {/* The Smartphone Frame - 100% Device Friendly on all screens */}
+          <div className="relative w-full max-w-[310px] sm:max-w-[340px] md:max-w-[360px] h-[620px] sm:h-[680px] md:h-[720px] rounded-[44px] sm:rounded-[48px] bg-slate-900 p-2.5 sm:p-3 shadow-2xl shadow-indigo-950/60 border-[3px] sm:border-[4px] border-slate-700 ring-1 ring-white/10 select-none mx-auto">
             {/* Glossy inner metallic frame line */}
             <div className="absolute inset-0 rounded-[44px] pointer-events-none border border-slate-500/20" />
 
@@ -768,21 +768,37 @@ export const PhoneMockupSlider: React.FC<PhoneMockupSliderProps> = ({ onDownload
             </div>
           </div>
 
-          {/* Slider Indicator Dots */}
-          <div className="flex items-center gap-2 mt-6">
-            {SCREENSHOT_SLIDES.map((_, idx) => (
-              <button
-                key={idx}
-                id={`slider-dot-${idx}`}
-                onClick={() => selectSlide(idx)}
-                aria-label={`Jump to screenshot ${idx + 1}`}
-                className={`transition-all duration-300 rounded-full cursor-pointer ${
-                  currentIndex === idx
-                    ? 'w-8 h-2.5 bg-gradient-to-r from-amber-400 to-indigo-500 shadow-md shadow-indigo-500/50'
-                    : 'w-2.5 h-2.5 bg-slate-700 hover:bg-slate-500'
-                }`}
-              />
-            ))}
+          {/* Slider Indicator Dots with mobile controls */}
+          <div className="flex items-center gap-3 mt-6">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous screenshot"
+              className="p-2 rounded-full bg-slate-800 text-slate-300 hover:text-white sm:hidden cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-2">
+              {SCREENSHOT_SLIDES.map((_, idx) => (
+                <button
+                  key={idx}
+                  id={`slider-dot-${idx}`}
+                  onClick={() => selectSlide(idx)}
+                  aria-label={`Jump to screenshot ${idx + 1}`}
+                  className={`transition-all duration-300 rounded-full cursor-pointer ${
+                    currentIndex === idx
+                      ? 'w-8 h-2.5 bg-gradient-to-r from-amber-400 to-indigo-500 shadow-md shadow-indigo-500/50'
+                      : 'w-2.5 h-2.5 bg-slate-700 hover:bg-slate-500'
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={handleNext}
+              aria-label="Next screenshot"
+              className="p-2 rounded-full bg-slate-800 text-slate-300 hover:text-white sm:hidden cursor-pointer"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Prompt explicit requirement: Add a “Download Now” button below the slider */}
