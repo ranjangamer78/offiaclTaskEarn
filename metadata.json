@@ -1,0 +1,6 @@
+{
+  "name": "TaskEarn - Download & Earn Daily Rewards",
+  "description": "Complete tasks, play daily spin & scratch games, and earn real rewards with TaskEarn. Download the official TaskEarn APK today.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
