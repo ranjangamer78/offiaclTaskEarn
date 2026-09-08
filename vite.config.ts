@@ -5,8 +5,23 @@ import fs from 'fs';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
+  // Determine base path: In GitHub Actions, automatically use repo name (/offiaclTaskEarn/)
+  let base = './';
+  if (process.env.BASE_PATH) {
+    base = process.env.BASE_PATH;
+  } else if (process.env.GITHUB_REPOSITORY) {
+    const parts = process.env.GITHUB_REPOSITORY.split('/');
+    const repo = parts[1];
+    const owner = parts[0];
+    if (repo && repo.toLowerCase() === `${owner.toLowerCase()}.github.io`) {
+      base = '/';
+    } else if (repo) {
+      base = `/${repo}/`;
+    }
+  }
+
   return {
-    base: './',
+    base,
     plugins: [
       react(),
       tailwindcss(),

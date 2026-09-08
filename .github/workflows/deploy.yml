@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -29,14 +29,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
       - name: Install dependencies
         run: npm install
 
       - name: Build project
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path || '' }}
         run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
