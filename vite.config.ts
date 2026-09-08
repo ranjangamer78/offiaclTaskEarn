@@ -4,19 +4,28 @@ import path from 'path';
 import fs from 'fs';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
-  // Determine base path: In GitHub Actions, automatically use repo name (/offiaclTaskEarn/)
-  let base = './';
-  if (process.env.BASE_PATH) {
-    base = process.env.BASE_PATH;
-  } else if (process.env.GITHUB_REPOSITORY) {
-    const parts = process.env.GITHUB_REPOSITORY.split('/');
-    const repo = parts[1];
-    const owner = parts[0];
-    if (repo && repo.toLowerCase() === `${owner.toLowerCase()}.github.io`) {
-      base = '/';
-    } else if (repo) {
-      base = `/${repo}/`;
+export default defineConfig(({ command }) => {
+  // In development (preview), use root base '/'
+  let base = '/';
+
+  // In production build for GitHub Pages:
+  if (command === 'build') {
+    if (process.env.BASE_PATH && process.env.BASE_PATH.trim() !== '') {
+      base = process.env.BASE_PATH.trim();
+      if (!base.endsWith('/')) base += '/';
+      if (!base.startsWith('/') && !base.startsWith('http')) base = '/' + base;
+    } else if (process.env.GITHUB_REPOSITORY) {
+      const parts = process.env.GITHUB_REPOSITORY.split('/');
+      const repo = parts[1];
+      const owner = parts[0];
+      if (repo && repo.toLowerCase() === `${owner.toLowerCase()}.github.io`) {
+        base = '/';
+      } else if (repo) {
+        base = `/${repo}/`;
+      }
+    } else {
+      // Default to exact repository name for GitHub Pages build
+      base = '/offiaclTaskEarn/';
     }
   }
 
