@@ -1,7 +1,8 @@
 {
-  "name": "react-example",
+  "name": "taskearn-landing-page",
+  "description": "Official landing page and APK download platform for TaskEarn mobile reward app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
